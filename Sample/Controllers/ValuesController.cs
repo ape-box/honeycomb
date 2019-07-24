@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-
 using Honeycomb.AspNetCore;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
+using Sample.Handlers;
 
 namespace Sample.Controllers
 {
@@ -13,10 +13,12 @@ namespace Sample.Controllers
     public class ValuesController : ControllerBase
     {
         private IHoneycombEventManager EventManager { get; }
+        private readonly IBusControl _busController;
 
-        public ValuesController(IHoneycombEventManager eventManager)
+        public ValuesController(IHoneycombEventManager eventManager, IBusControl busController)
         {
-          EventManager = eventManager;
+            EventManager = eventManager ?? throw new ArgumentNullException(nameof(eventManager));
+            _busController = busController ?? throw new ArgumentNullException(nameof(busController));
         }
 
         // GET api/values
@@ -37,8 +39,11 @@ namespace Sample.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] string value)
         {
+            await _busController.Publish<IAddValues>(new { Value = value });
+
+            return Ok();
         }
 
         // PUT api/values/5

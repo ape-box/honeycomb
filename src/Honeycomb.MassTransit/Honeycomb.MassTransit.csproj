@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="5.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Honeycomb/Honeycomb.csproj" />
+  </ItemGroup>
+
+</Project>
